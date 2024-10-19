@@ -1,0 +1,42 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-traffic-splitting-http
+  namespace: default
+spec:
+  parentRefs:
+  - name: tls-gateway
+    namespace: cilium-gateway
+    sectionName: http
+  hostnames:
+  - "http-traffic-splitting.hkchen.tech"
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-traffic-splitting-https
+  namespace: default
+spec:
+  parentRefs:
+  - name: tls-gateway
+    namespace: cilium-gateway
+  hostnames:
+  - "http-traffic-splitting.hkchen.tech"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: http-traffic-splitting-svc-v1
+      port: 80
+      weight: 90
+    - name: http-traffic-splitting-svc-v2
+      port: 80
+      weight: 10

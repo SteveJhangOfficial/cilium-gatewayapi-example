@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-traffic-splitting-svc-v1
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: http-traffic-splitting-v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-traffic-splitting-svc-v2
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: http-traffic-splitting-v2
