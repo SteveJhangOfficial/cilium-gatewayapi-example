@@ -15,3 +15,5 @@ Use Gateway API HTTP route specify weights to shift traffic between different ba
       port: 80
       weight: 10
 ```
+Hubble visual service  
+![image](https://github.com/SteveJhangOfficial/cilium-gatewayapi-example/blob/main/http-traffic-splitting/img/http-traffic-splitting-visual.png)
