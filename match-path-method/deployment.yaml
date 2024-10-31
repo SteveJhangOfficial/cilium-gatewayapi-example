@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-path-method-app-v1
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: match-path-method-v1
+    spec:
+      containers:
+        - name: k8s-lab-test-quarkus-v1
+          image: harbor.hkchen.tech/library/k8s-lab-test-quarkus:1.0
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"        
+              memory: "512Mi"    
+            requests:
+              cpu: "250m"        
+              memory: "256Mi"    
+  selector:
+    matchLabels:
+      app: match-path-method-v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-path-method-app-v2
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: match-path-method-v2
+    spec:
+      containers:
+        - name: k8s-lab-test-quarkus-v2
+          image: harbor.hkchen.tech/library/k8s-lab-test-quarkus:2.0
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"        
+              memory: "512Mi"    
+            requests:
+              cpu: "250m"        
+              memory: "256Mi"    
+  selector:
+    matchLabels:
+      app: match-path-method-v2

@@ -1,0 +1,50 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: headermodifier-http
+  namespace: default
+spec:
+  parentRefs:
+  - name: tls-gateway
+    namespace: cilium-gateway
+    sectionName: http
+  hostnames:
+  - "headermodifier.hkchen.tech"
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: headermodifier-https
+  namespace: default
+spec:
+  parentRefs:
+  - name: tls-gateway
+    namespace: cilium-gateway
+  hostnames:
+  - "headermodifier.hkchen.tech"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+        - name: Cache-Control
+          value: "no-cache, no-store"
+        - name: my-key
+          value: my-value
+    backendRefs:
+    - name: headermodifier-svc-v1
+      port: 80
+      weight: 90
+    - name: headermodifier-svc-v2
+      port: 80
+      weight: 10
